@@ -371,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                 if(alertDialog.isShowing())
                 {
                     alertDialog.dismiss();
-                    finish();
+                    game_over_screen();
                 }
 
             }
@@ -414,16 +414,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-    private String to_time(long milli)
-    {
-        String s = ""+(int) (milli/1000+1);
-        if (s.length()<2)
-            s="0"+s;
-        return s;
-    }
-
-
+    
 }
 
 
