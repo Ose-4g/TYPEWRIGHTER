@@ -53,6 +53,13 @@ public class GameOptionsScreen extends AppCompatActivity {
         });
 
 
+        findViewById(R.id.high_scores).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(GameOptionsScreen.this,HighScores.class));
+            }
+        });
+
 
 
 

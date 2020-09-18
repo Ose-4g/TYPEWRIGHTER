@@ -21,19 +21,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp"
-        app:layout_constraintGuide_percent="0.8" />
+        app:layout_constraintGuide_percent="0.85" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline4">
 
@@ -78,15 +74,15 @@
 
     <TextView
         android:id="@+id/curr_score"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_weight="10"
         android:gravity="center"
         android:text="30000"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         android:textColor="@color/my_red"
+        android:textSize="96sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,8 +90,10 @@
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="64dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Best Score:"
+            android:text="Your Best:"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
@@ -120,4 +118,29 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/gold_badge"
+        android:layout_width="96sp"
+        android:layout_height="96sp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="80sp"
+        android:adjustViewBounds="true"
+        android:rotation="-25"
+        app:layout_constraintEnd_toEndOf="@+id/curr_score"
+        app:layout_constraintStart_toEndOf="@+id/curr_score"
+        app:layout_constraintTop_toTopOf="@+id/curr_score"
+        app:srcCompat="@drawable/gold_badge" />
+
+    <TextView
+        android:id="@+id/high_score_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:text="New High Score"
+        android:textColor="@color/score_back"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/gold_badge"
+        app:layout_constraintTop_toBottomOf="@+id/curr_score" />
 </androidx.constraintlayout.widget.ConstraintLayout>

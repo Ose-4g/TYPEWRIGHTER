@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -21,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -92,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 {
                     mCurr_pos += mStep;
                     mHandler.postDelayed(this,curr_value);
-                    Log.i("posRunn",mCurr_pos+"");
                 }
                 else
                 {
@@ -207,9 +209,16 @@ public class MainActivity extends AppCompatActivity {
     private void pause_dialog() {
         pauseGame();
         // hide the keyboard in order to avoid getTextBeforeCursor on inactive InputConnection
-        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        // hide the keyboard in order to avoid getTextBeforeCursor on inactive InputConnection
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        inputMethodManager.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+            inputMethodManager.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+        }
+        catch(Exception e)
+        {
+
+        }
         answer.removeTextChangedListener(mTextwatcher);
         mLayoutInflater = LayoutInflater.from(MainActivity.this);
         findViewById(R.id.question).bringToFront();
@@ -268,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
                     if(isPaused)
                     {
                         isPaused=false;
-                        Log.i("posPlay",mCurr_pos+"");
                         mHandler.postDelayed(mGamePlay,curr_value);
 
                     }
@@ -323,9 +331,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         // hide the keyboard in order to avoid getTextBeforeCursor on inactive InputConnection
-        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        inputMethodManager.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+            inputMethodManager.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+        }
+        catch(Exception e)
+        {
+
+        }
         super.onPause();
     }
 
@@ -334,7 +348,6 @@ public class MainActivity extends AppCompatActivity {
 
         int[] pos =new int[2];
         view.getLocationInWindow(pos);
-        Log.i("pos",pos[0]+" "+pos[1]);
         return pos[1];
     }
 
@@ -409,8 +422,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void game_over_screen()
     {
+        boolean newHighScore = false;
+        //SharedPreferences sharedPreferences = HighScoreSP.getPrefs(getApplicationContext());
+        ArrayList<Long> allScores = HighScoreSP.getAllScores(getApplicationContext());
+        if(score<Collections.min(allScores))//if this is lower than the lowest score
+        {
+
+        }
+        else//it beats one of the previous scores
+        {
+            if(score> Collections.max(allScores))
+                newHighScore=true;
+
+            allScores.remove(0);
+            allScores.add(score);
+            HighScoreSP.updateSP(getApplicationContext());
+
+        }
         Intent intent = new Intent(MainActivity.this,GameOverScreenActivity.class);
         intent.putExtra(GameOverScreenActivity.GAME_SCORE, score);
+        intent.putExtra(GameOverScreenActivity.NEW_HIGH_SCORE,newHighScore);
         startActivity(intent);
         finish();
     }
