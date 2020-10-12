@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ose4g.typerighter">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/type_righter"
@@ -9,7 +11,10 @@
         android:roundIcon="@mipmap/type_righter_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GameOverScreenActivity"></activity>
+        <activity android:name=".GlobalLeaderboardActivity"
+            android:theme="@style/AppTheme2"></activity>
+        <activity android:name=".GoogleSignInActivity" />
+        <activity android:name=".GameOverScreenActivity" />
         <activity android:name=".HighScores" />
         <activity android:name=".GameOptionsScreen" />
         <activity

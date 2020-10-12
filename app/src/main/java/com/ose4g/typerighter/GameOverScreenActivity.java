@@ -10,6 +10,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ose4g.typerighter.SharedPreferences.HighScoreSP;
+
 import java.util.Collections;
 
 public class GameOverScreenActivity extends AppCompatActivity {

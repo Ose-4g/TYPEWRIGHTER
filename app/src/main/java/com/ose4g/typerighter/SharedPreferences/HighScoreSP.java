@@ -1,4 +1,4 @@
-package com.ose4g.typerighter;
+package com.ose4g.typerighter.SharedPreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -5,13 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -21,6 +19,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.ose4g.typerighter.SharedPreferences.HighScoreSP;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView question3;
     private EditText answer;
     private boolean isPaused;
+    private boolean game_ending;
     private Animation mZoom_entry;
     private Animation mFade_out;
     final private long starting_value = 70;
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         isPaused = false;
         just_starting=true;
         done_one_time = false;
+        game_ending = false;
         mZoom_entry = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_out_entry);
         mFade_out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
         mPlay_countdown = findViewById(R.id.play_countdown);
@@ -330,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        super.onPause();
         // hide the keyboard in order to avoid getTextBeforeCursor on inactive InputConnection
         try {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -340,7 +343,16 @@ public class MainActivity extends AppCompatActivity {
         {
 
         }
-        super.onPause();
+        if(!game_ending)
+        {
+            if(!isPaused && !just_starting )
+                pause_dialog();
+            else {
+                mHandler.removeCallbacksAndMessages(null);
+                pause_dialog();
+            }
+        }
+
     }
 
     private float getPosition(View view)
@@ -422,6 +434,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void game_over_screen()
     {
+        game_ending = true;
         boolean newHighScore = false;
         //SharedPreferences sharedPreferences = HighScoreSP.getPrefs(getApplicationContext());
         ArrayList<Long> allScores = HighScoreSP.getAllScores(getApplicationContext());
