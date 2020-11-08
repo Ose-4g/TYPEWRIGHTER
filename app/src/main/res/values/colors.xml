@@ -10,4 +10,7 @@
     <color name="somewhat_transparent">#99323235</color>
     <color name="water_blue">#8000BCD4</color>
     <color name="score_back">#737272</color>
+    <color name="dark_blue">#095C81</color>
+    <color name="dark_transparent">#4F313030</color>
+    <color name="darker_transparent">#D7313030</color>
 </resources>

@@ -1,10 +1,8 @@
 package com.ose4g.typerighter;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,20 +16,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.ose4g.typerighter.Firebase.FireBaseInstance;
-import com.ose4g.typerighter.Models.User;
+import com.ose4g.typerighter.GlobalLeaderboard.GlobalLeaderboardActivity;
 
 public class GoogleSignInActivity extends AppCompatActivity {
 
@@ -114,16 +107,14 @@ public class GoogleSignInActivity extends AppCompatActivity {
     {
         if(user != null)
         {
-//            mReference = FireBaseInstance.getDatabaseReference();
-//            mReference.child("users").child(user.getUid()).setValue(new User(user.getUid(),"aunty",(long) -1050));
 
-            Toast.makeText(GoogleSignInActivity.this, "Signed in successfully", Toast.LENGTH_LONG).show();
+            Toast.makeText(GoogleSignInActivity.this, getString(R.string.sign_in_successful), Toast.LENGTH_LONG).show();
             startActivity(new Intent(GoogleSignInActivity.this, GlobalLeaderboardActivity.class));
             finish();
         }
         else
         {
-            Toast.makeText(GoogleSignInActivity.this, "Unable to sign in", Toast.LENGTH_LONG);
+            Toast.makeText(GoogleSignInActivity.this, getString(R.string.sign_in_unsuccessful), Toast.LENGTH_LONG);
         }
 
     }
@@ -142,7 +133,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(GoogleSignInActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GoogleSignInActivity.this, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 

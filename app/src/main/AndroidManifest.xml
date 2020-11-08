@@ -11,8 +11,13 @@
         android:roundIcon="@mipmap/type_righter_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GlobalLeaderboardActivity"
-            android:theme="@style/AppTheme2"></activity>
+        <activity android:name=".HowToPlayActivity"></activity>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7932162834190177~3546879680" />
+
+        <activity android:name=".GlobalLeaderboard.GlobalLeaderboardActivity" />
         <activity android:name=".GoogleSignInActivity" />
         <activity android:name=".GameOverScreenActivity" />
         <activity android:name=".HighScores" />

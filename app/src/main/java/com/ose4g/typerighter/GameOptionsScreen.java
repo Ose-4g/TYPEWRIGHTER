@@ -18,27 +18,20 @@ public class GameOptionsScreen extends AppCompatActivity {
             R.id.how_to_play,
             R.id.high_scores};
     private Animation slide_in_from_left;
-    private  Animation fade_in;
-    private Animation fade_out;
-    private Animation slide_in_from_right;
+
 
 
 
     private Handler mHandler;
-    private int difficulty;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_options_screen);
 
         slide_in_from_left = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_in_from_left);
-        fade_in = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in);
-
-        fade_out = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out);
-        slide_in_from_right = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_in_from_right);
 
 
-        difficulty = 1;
+
 
 
 
@@ -47,7 +40,14 @@ public class GameOptionsScreen extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(GameOptionsScreen.this, MainActivity.class);
-                intent.putExtra(MainActivity.GAME_DIFFICULTY,difficulty);
+                startActivity(intent);
+            }
+        });
+
+        ((ImageView) findViewById(R.id.how_to_play)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GameOptionsScreen.this, HowToPlayActivity.class);
                 startActivity(intent);
             }
         });

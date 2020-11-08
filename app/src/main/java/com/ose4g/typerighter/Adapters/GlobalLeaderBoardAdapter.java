@@ -1,10 +1,7 @@
 package com.ose4g.typerighter.Adapters;
 
 import android.content.Context;
-import android.graphics.BlendMode;
-import android.graphics.BlendModeColorFilter;
-import android.graphics.PorterDuff;
-import android.os.Build;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ose4g.typerighter.GlobalLeaderboard.GlobalLeaderboardViewModel;
 import com.ose4g.typerighter.Models.User;
 import com.ose4g.typerighter.R;
 
@@ -21,14 +21,16 @@ import java.util.ArrayList;
 
 public class GlobalLeaderBoardAdapter extends RecyclerView.Adapter<GlobalLeaderBoardAdapter.ViewHolder> {
     Context mContext;
-    ArrayList<User> mUsers;
+    public ArrayList<User> mUsers;
     LayoutInflater mLayoutInflater;
-
-    public GlobalLeaderBoardAdapter(Context context, ArrayList<User> users) {
+    GlobalLeaderboardViewModel mViewModel;
+    public GlobalLeaderBoardAdapter(Context context, ArrayList<User> users, GlobalLeaderboardViewModel viewModel) {
         mContext = context;
         mUsers = users;
         mLayoutInflater = LayoutInflater.from(mContext);
+        mViewModel = viewModel;
     }
+
 
     @NonNull
     @Override
@@ -56,6 +58,8 @@ public class GlobalLeaderBoardAdapter extends RecyclerView.Adapter<GlobalLeaderB
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView rank, username, bestScore;
         LinearLayout mLayout;
+        ConstraintLayout mConstraintLayout;
+        CardView mCardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +67,8 @@ public class GlobalLeaderBoardAdapter extends RecyclerView.Adapter<GlobalLeaderB
             username = itemView.findViewById(R.id.userName);
             bestScore = itemView.findViewById(R.id.bestScore);
             mLayout = itemView.findViewById(R.id.bkg_list_item);
+            mConstraintLayout = itemView.findViewById(R.id.layout);
+            mCardView = itemView.findViewById(R.id.cardView);
 
         }
 
@@ -71,11 +77,23 @@ public class GlobalLeaderBoardAdapter extends RecyclerView.Adapter<GlobalLeaderB
             rank.setText((position+1)+"");
             username.setText(user.getUserName());
             bestScore.setText((user.getBestScore()*-1)+"");
-            if((position+1)%2==1)
-                changeColor(R.color.light_grey);
+
+
+            if(mViewModel.mFirebaseUser.getUid().equals(user.getUserId()))
+            {
+                mCardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.darker_transparent));
+                mConstraintLayout.setPadding(16,16,16,16);
+                setImportant(rank,true);
+                setImportant(username,true);
+                setImportant(bestScore,true);
+            }
             else
             {
-                changeColor(android.R.color.transparent);
+                mCardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.dark_transparent));
+                mConstraintLayout.setPadding(40,0,40,4);
+                setImportant(rank,false);
+                setImportant(username,false);
+                setImportant(bestScore,false);
             }
         }
 
@@ -84,6 +102,18 @@ public class GlobalLeaderBoardAdapter extends RecyclerView.Adapter<GlobalLeaderB
             mLayout.setBackgroundColor(mContext.getResources().getColor(color));
         }
 
+        public void setImportant(TextView view, boolean important)
+        {
+            if(important)
+            {
+                view.setTextColor(mContext.getResources().getColor(android.R.color.white));
+
+            }
+            else
+            {
+                view.setTextColor(mContext.getResources().getColor(R.color.batman_grey));
+            }
+        }
 
     }
 }

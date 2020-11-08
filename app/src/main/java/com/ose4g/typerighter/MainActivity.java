@@ -1,6 +1,8 @@
 package com.ose4g.typerighter;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -15,11 +17,21 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.ose4g.typerighter.SharedPreferences.HighScoreSP;
 
 import java.util.ArrayList;
@@ -28,10 +40,8 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static  String GAME_DIFFICULTY = "com.ose4g.typerighter.GAME_DIFFICULTY";
     private TextView mPlay_countdown;
     private Handler mHandler;
-    private int difficulty;
     private TextView question1;
     private TextView question2;
     private TextView question3;
@@ -51,13 +61,16 @@ public class MainActivity extends AppCompatActivity {
     private float mCenter;
     private float mStep;
     private Runnable mGamePlay;
-    private float mQuestion_height;
     private int curr_tv;
     private TextView[] questions;
     private String[] mValues;
     private float mCurr_pos;
     private TextWatcher mTextwatcher;
     private boolean done_one_time;
+    private MainActivityViewModel mViewModel;
+
+    private boolean adshowing;
+    private boolean mIsrewared;
 
 
     @Override
@@ -78,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         if(!done_one_time)
         {
             mQuestion_position = getPosition(findViewById(R.id.score));
-            mQuestion_height = mQuestion.getHeight();
             mCenter = getPosition(findViewById(R.id.limit));
             findViewById(R.id.limit).bringToFront();
             mStep = (mCenter-mQuestion_position)/100;
@@ -100,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 else
                 {
                     mHandler.removeCallbacks(this);
-                    if(score<1000)
+                    if(score<0)
                         game_over_screen();
                     else
                         alertYouLose();
@@ -129,9 +141,11 @@ public class MainActivity extends AppCompatActivity {
                     if(curr_tv==0)
                     {
                         score+=100;
+                        long a = (long) (10*(mCenter-mCurr_pos)/(mCenter-mQuestion_position));
+                        score+=a;
                         ((TextView)findViewById(R.id.score)).setText(score+"");
-                        if(score%200==0)
-                            curr_value = Math.max(5,curr_value-5);
+                        if(getHundred(score)%200==0)
+                            curr_value = Math.max(7,curr_value-5);
 
                         mHandler.removeCallbacks(mGamePlay);
                         nextLevel();
@@ -155,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.play_countdowm);
 
         curr_tv=0;
+        adshowing = false;
         mQuestion = (LinearLayout) findViewById(R.id.question);
         isPaused = false;
         just_starting=true;
@@ -166,6 +181,14 @@ public class MainActivity extends AppCompatActivity {
         strikes = 0;
         score = 0;
         mHandler = new Handler();
+
+        mViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+
+        MobileAds.initialize(this);
+        mViewModel.mContext = this;
+        mViewModel.initializeAds();
+
+
 
         mValues = new String[]{"aba","abs","ace","act","add","ado","aft","age","ago","aha","aid","aim","air","ala","ale","all","alt","amp","ana","and","ant","any",
                 "ape","app","apt","arc","are","ark","arm","art","ash","ask","asp","ass","ate","ave","awe","axe","aye","BAA","bad","bag","ban","bar","bat","bay",
@@ -230,6 +253,8 @@ public class MainActivity extends AppCompatActivity {
         alertDialogBuilder.setView(alertView);
         alertDialogBuilder.setCancelable(false);
         final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
 
 
@@ -343,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
         {
 
         }
-        if(!game_ending)
+        if(!game_ending && !adshowing)
         {
             if(!isPaused && !just_starting )
                 pause_dialog();
@@ -379,6 +404,8 @@ public class MainActivity extends AppCompatActivity {
         alertDialogBuilder.setView(view);
         alertDialogBuilder.setCancelable(false);
         final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
 
 
@@ -403,17 +430,15 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        ((TextView) view.findViewById(R.id.keep_playing)).setOnClickListener(new View.OnClickListener() {
+        ((Button) view.findViewById(R.id.keep_playing)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 timer.cancel();
                 alertDialog.dismiss();
-                score -= 1000;
-                mCurr_pos = mQuestion_position;
-                just_starting=true;
-                isPaused=false;
-                play_countdown();
+                //score -= 1000;
+                adshowing = true;
+                showAds();
 
             }
         });
@@ -458,7 +483,68 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    
+
+    public static long getHundred(long score)
+    {
+        long ans = score%100;
+        return score-ans;
+    }
+
+
+
+    public void showAds()
+    {
+        if(mViewModel.mRewardedAd.isLoaded())
+        {
+            RewardedAdCallback adCallback = new RewardedAdCallback() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+
+                    mIsrewared = true;
+                    Toast.makeText(MainActivity.this, getString(R.string.ad_played),Toast.LENGTH_SHORT).show();
+                    adshowing = false;
+                }
+
+                @Override
+                public void onRewardedAdOpened() {
+                    super.onRewardedAdOpened();
+                    mIsrewared = false;
+                }
+
+                @Override
+                public void onRewardedAdClosed() {
+                    super.onRewardedAdClosed();
+                    if(mIsrewared)
+                    {
+                        mCurr_pos = mQuestion_position;
+                        just_starting=true;
+                        isPaused=false;
+                        play_countdown();
+                    }
+                    else
+                    {
+                        game_over_screen();
+                    }
+                    adshowing = false;
+                    mViewModel.initializeAds();
+                }
+
+                @Override
+                public void onRewardedAdFailedToShow(AdError adError) {
+                    super.onRewardedAdFailedToShow(adError);
+                    Toast.makeText(MainActivity.this,getString(R.string.cant_play_ad), Toast.LENGTH_SHORT).show();
+                    adshowing = false;
+                    game_over_screen();
+                }
+            };
+            mViewModel.mRewardedAd.show(MainActivity.this,adCallback);
+        }
+        else
+        {
+            Toast.makeText(MainActivity.this,getString(R.string.cant_load_ad), Toast.LENGTH_SHORT).show();
+            adshowing = false;
+            game_over_screen();
+        }
+
+    }
 }
-
-

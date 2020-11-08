@@ -2,20 +2,22 @@ package com.ose4g.typerighter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
+
 import android.widget.ImageView;
+
 
 public class GameSplashScreen extends AppCompatActivity {
 
     private ImageView ose4g;
     private ImageView type_righter;
+
 
     private Handler mHandler;
 
@@ -30,24 +32,18 @@ public class GameSplashScreen extends AppCompatActivity {
         type_righter.setVisibility(View.INVISIBLE);
 
 
-        Animation slide_in_from_down = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.slide_in_from_down);
-        final Animation slide_out_down = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.slide_out_down);
+
+
 
         final Animation fade_in = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.fade_in);
         final Animation fade_out = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.fade_out);
 
-        final Animation zoom_in_exit = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.zoom_in_exit);
-
-        final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.rotate);
 
 
-        mHandler = new Handler();
+
+        mHandler = new Handler(Looper.getMainLooper());
         final int[] drawables = {R.id.ose4g,R.id.type_righter};
 
         Runnable runnable = new Runnable() {
@@ -58,7 +54,7 @@ public class GameSplashScreen extends AppCompatActivity {
                 image.setVisibility(View.VISIBLE);
                 image.startAnimation(fade_in);
 
-                new Handler().postDelayed(new Runnable() {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         image.startAnimation(fade_out);

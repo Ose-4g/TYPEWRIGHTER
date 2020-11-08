@@ -42,7 +42,6 @@ public class HighScoreSP
         SharedPreferences.Editor editor = getPrefs(context).edit();
         editor.putLong(key,score);
         editor.apply();
-        //Log.i("SP","ADDED"+score);
     }
 
     public static ArrayList<Long> getAllScores(Context context)
@@ -51,7 +50,7 @@ public class HighScoreSP
         for(int i=0;i<20;i++)
         {
             allScores.add(getScore(context,i+""));
-            //Log.i("SP","ADDED"+getScore(context,i+""));
+
         }
         Collections.sort(allScores);;
         return allScores;
@@ -65,7 +64,7 @@ public class HighScoreSP
             for(int i=0;i<20;i++)
             {
                 putScore(context,i+"",allScores.get(i));
-                //Log.i("SP","UPDATED"+getScore(context,i+""));
+
             }
 
         }

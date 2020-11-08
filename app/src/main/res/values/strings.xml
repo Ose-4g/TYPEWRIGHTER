@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">TypeRighter</string>
+    <string name="new_high_score">New High Score</string>
+    <string name="your_best">Your Best:</string>
+    <string name="change_username">Change Username</string>
+    <string name="high_scores">HIGH SCORES</string>
+    <string name="global_leaderboard">GLOBAL LEADERBOARD</string>
+    <string name="edit_your_username">EDIT YOUR USERNAME</string>
+    <string name="enter_your_new_username">Enter your new username</string>
+    <string name="update_username">UPDATE USERNAME</string>
+    <string name="log_out_question">Log Out?</string>
+    <string name="yes_override">YES</string>
+    <string name="no_override">NO</string>
+    <string name="watch_video_to_continue">watch video to continue</string>
+    <string name="skip">SKIP</string>
+    <string name="you_lose">YOU LOSE</string>
+    <string name="your_progress_lost">Your Progress will be lost</string>
+    <string name="back_to_game">RESUME</string>
+    <string name="menu">MENU</string>
+    <string name="username_update_successful">userName updated successfully</string>
+    <string name="username_update_unsuccessful">Unable to update username</string>
+    <string name="sign_out_successful">Signed out successfully</string>
+    <string name="sign_in_successful">Signed in successfully</string>
+    <string name="sign_in_unsuccessful">Unable to sign in. Check your network and try again</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="cant_load_ad">Couldn\'t load ad</string>
+    <string name="cant_play_ad">Couldn\'t play ad</string>
+    <string name="ad_played">You can continue playing, ad has played</string>
+    <string name="how_to_play">HOW TO PLAY</string>
+    <string name="explanation1">The game is quite simple really</string>
+    <string name="explanation2">Type the words on the rock before they drown.</string>
+    <string name="explanation3">When you type a letter correctly it disappears</string>
+    <string name="explanation4">Type all letters correctly \n(Type right)\n before the rocks drown</string>
+    <string name="explanation5">You lose when the rocks drown.</string>
 </resources>
