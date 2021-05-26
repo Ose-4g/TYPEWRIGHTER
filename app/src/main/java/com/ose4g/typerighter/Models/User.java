@@ -49,7 +49,7 @@ public class User {
         User user = (User) obj;
         if(user!=null)
         {
-            if(user.userId == this.userId)
+            if(user.userId .equals(this.userId))
                 return true;
         }
         return false;

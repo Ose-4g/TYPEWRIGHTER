@@ -114,7 +114,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
         }
         else
         {
-            Toast.makeText(GoogleSignInActivity.this, getString(R.string.sign_in_unsuccessful), Toast.LENGTH_LONG);
+            Toast.makeText(GoogleSignInActivity.this, getString(R.string.sign_in_unsuccessful), Toast.LENGTH_LONG).show();
         }
 
     }
